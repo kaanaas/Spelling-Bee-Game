@@ -269,7 +269,7 @@ function scoreWord(word) {
     }
     if (bingo === true) {
         score += bingoBonus;
-        console.log(`Bingo! Bonus of ${bingoBonus} points.`);
+        // console.log(`Bingo! Bonus of ${bingoBonus} points.`);
     }
 
     // difficulty multiplier (last)
@@ -310,7 +310,7 @@ function scoreAllWords() {
         let thisWord = {"word": gameWordList[i], "score": wordScore};
         gameWordListScored.push(thisWord);
     }
-     console.log(gameWordListScored);
+     // console.log(gameWordListScored);
 }
 
 // Build end screen table (all words)
