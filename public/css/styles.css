@@ -1,0 +1,591 @@
+/*Bee Game stylesheet*/
+
+/* variables */
+:root {
+    /* make fontkit for header font! */
+    --header-font-family: "Bunch Blossoms Personal Use", sans-serif;
+    --copy-font-family: "DM Sans", sans-serif;
+    --game-font-family: "DM Sans", sans-serif;
+    --global-color-0: #FFB500;
+    --global-color-0l: #FFD166;
+    --global-color-1: #51BB7A;
+    --global-color-2: #9C338C;
+    --global-color-dark: #1E2021;
+    --global-color-dgrey: #444E40;
+    --global-color-grey: #E4DED0;
+    --global-color-lgrey: #F4EEE0;
+    --global-color-white: floralwhite;
+    --global-color-green: #24A434;
+    --global-color-red: #A43424;
+}
+
+html {
+    height: 100%;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background-color: var(--global-color-0l);
+    font-family: var(--copy-font-family);
+}
+
+body::selection {
+    background-color: var(--global-color-1);
+}
+
+div {
+    font-family: var(--copy-font-family);
+}
+
+h1 {
+    font-size: 2rem;
+    line-height: 2;
+    color: var(--global-color-dark);
+}
+
+h1::selection {
+    background-color: var(--global-color-1);
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--global-color-dark);
+}
+
+p::selection {
+    background-color: var(--global-color-1);
+}
+
+/* containers */
+.container {
+    position: relative;
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+/* margins */
+.v-margin {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.v-margin-l {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+/* boxes */
+.game-wrapper {
+    display: flex;
+    height: 600px;
+    width: 800px;
+    border-radius: 20px;
+    background-color: var(--global-color-white);
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.game-window {
+    height: 500px;
+    width: 800px;
+}
+
+.play-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+    height: 100%;
+}
+
+.hexes-wrapper {
+    --hex-edge-length: 60px;
+    position: relative;
+    height: calc(5.464*var(--hex-edge-length));
+    width: calc(5.732*var(--hex-edge-length));
+}
+
+.hex-wrapper {
+    position: absolute;
+    height: calc(var(--hex-edge-length)*2);
+    width: calc(var(--hex-edge-length)*1.732);
+}
+
+.hex-wrapper#hex0 {
+    top: calc(var(--hex-edge-length)*1.732);
+    left: calc(var(--hex-edge-length)*2);
+}
+
+.hex-wrapper#hex1 {
+    top: calc(var(--hex-edge-length)*1.732);
+}
+
+.hex-wrapper#hex2 {
+    left: calc(var(--hex-edge-length)*1);
+}
+
+.hex-wrapper#hex3 {
+    left: calc(var(--hex-edge-length)*3);
+}
+
+.hex-wrapper#hex4 {
+    top: calc(var(--hex-edge-length)*1.732);
+    left: calc(var(--hex-edge-length)*4);
+}
+
+.hex-wrapper#hex5 {
+    top: calc(var(--hex-edge-length)*2*1.732);
+    left: calc(var(--hex-edge-length)*1);
+}
+
+.hex-wrapper#hex6 {
+    top: calc(var(--hex-edge-length)*2*1.732);
+    left: calc(var(--hex-edge-length)*3);
+}
+
+.hex {
+    margin-top: 30px;
+    width: calc(var(--hex-edge-length)*1.732);
+    height: var(--hex-edge-length);
+    background-color: var(--global-color-grey);
+    position: relative;
+    transition: 0.2s ease;
+    will-change: transform;
+}
+
+.hex::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-bottom: calc(0.5*var(--hex-edge-length)) solid var(--global-color-grey);
+    border-left: calc(var(--hex-edge-length)*1.732*0.5) solid transparent;
+    border-right: calc(var(--hex-edge-length)*1.732*0.5) solid transparent;
+    position: absolute;
+    top: calc(-0.5*var(--hex-edge-length));
+}
+
+.hex:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: calc(0.5*var(--hex-edge-length)) solid var(--global-color-grey);
+    border-left: calc(var(--hex-edge-length)*1.732*0.5) solid transparent;
+    border-right: calc(var(--hex-edge-length)*1.732*0.5) solid transparent;
+    position: absolute;
+    bottom: calc(-0.5*var(--hex-edge-length));
+}
+
+.hex:hover {
+    transform: scale(1.1) translateZ(0);
+}
+
+.hex:active {
+    transform: scale(0.9) translateZ(0);
+}
+
+.hex-center {
+    background-color: var(--global-color-0);
+}
+
+.hex-center::before {
+    border-bottom: calc(0.5*var(--hex-edge-length)) solid var(--global-color-0);
+}
+
+.hex-center::after {
+    border-top: calc(0.5*var(--hex-edge-length)) solid var(--global-color-0);
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+.word-input {
+    width: 70%;
+    padding: 0.35rem;
+    font-size: 1.75rem;
+    font-family: var(--copy-font-family);
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.word-input::selection {
+    background-color: var(--global-color-0l);
+}
+
+.wordlist-wrapper {
+    width: 300px;
+    height: 90%;
+    background-color: var(--global-color-lgrey);
+    border-radius: 0.5rem;
+}
+
+.wordlist {
+    text-align: center;
+    height: 85%;
+}
+
+/* Buttons */
+.reset-button-wrapper {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    height: 3.2rem;
+    width: 3.2rem;
+    text-align: center;
+    transition: 0.2s ease;
+    will-change: transform;
+}
+
+.reset-button-hex {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    color: var(--global-color-0);
+    font-size: 4rem;
+    line-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.reset-button-text {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    font-size: 2rem;
+    color: var(--global-color-dark);
+    line-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.reset-button-hex::selection {
+    background-color: #0000;
+}
+
+.reset-button-text::selection {
+    background-color: #0000;
+}
+
+.reset-button-wrapper:hover {
+    opacity: 0.75;
+}
+
+.reset-button-wrapper:active {
+    transform: scale(0.9) rotate(540deg);
+}
+
+/* text */
+.game-title {
+    font-family: var(--header-font-family);
+    font-size: 2.5rem;
+}
+
+.hex-char {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    font-family: var(--game-font-family);
+    font-weight: bold;
+    font-size: 2.5rem;
+    color: var(--global-color-dark);
+}
+
+.hex-char::selection {
+    background-color: var(--global-color-grey);
+}
+
+.hex-char-center::selection {
+    background-color: var(--global-color-0);
+}
+
+.submit-message {
+    display: flex;
+    margin: 1rem 0;
+    position: center;
+    height: 1.5rem;
+    max-height: 1.5rem;
+    text-align: center;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    align-items: center;
+}
+
+.submit-message-p {
+    margin: 0;
+}
+
+.accepted-word-wrapper {
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    max-width: 180px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.accepted-word {
+    text-transform: uppercase;
+    color: var(--global-color-green);
+}
+
+.rejected-word {
+    text-transform: uppercase;
+    color: var(--global-color-red);
+}
+
+.repeated-word {
+    text-transform: uppercase;
+    color: var(--global-color-dgrey);
+}
+
+.flavor-text {
+    font-size: inherit;
+    margin: 0;
+    text-align: center;
+}
+
+.rules-text {
+    text-align: left;
+    line-height: 1.75;
+}
+
+._125 {
+    font-size: 1.25rem;
+}
+._150 {
+    font-size: 1.5rem;
+}
+._175 {
+    font-size: 1.75rem;
+}
+._200 {
+    font-size: 2rem;
+}
+
+/* Tables */
+.wordlist-table {
+    margin: 0.5rem auto;
+    width: 90%;
+    max-width: 90%;
+    table-layout: fixed;
+    display: table;
+    padding: 1rem;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.col-word {
+    width: 70%;
+    max-width: 70%;
+    text-align: center;
+    text-overflow: ellipsis;
+}
+
+.col-score {
+    padding-right: 1rem;
+    text-align: right;
+}
+
+.th-row {
+    font-size: 1.25rem;
+}
+
+.wl-th-word {
+    border-bottom: 1px var(--global-color-white) solid;
+    padding: 0.5rem 0;
+}
+
+.wl-th-score {
+    border-bottom: 2px var(--global-color-white) solid;
+}
+
+.total-table {
+    margin: auto;
+    width: 90%;
+    padding: 1rem;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.th-row {
+    font-size: 1.25rem;
+}
+
+._top-border {
+    border-top: 2px var(--global-color-white) solid;
+}
+
+td {
+    line-height: 1.5;
+}
+
+tr:first-child > td {
+    padding-top: 0.5rem;
+}
+
+.total-score {
+    font-size: 1.75rem;
+    transition: 0.2s ease;
+}
+
+
+/* Dropdown Menu */
+.dropbtn {		/* Dropdown button */
+    font-family: var(--main-font-family);
+    background-color: rgba(0,0,0,0);
+    color: var(--main-text-color);
+    padding: 10px;
+    font-size: 2rem;
+    border: none;
+    transition: 0.2s ease;
+}
+
+.dropdown {		/* Dropdown content container position */
+    position: absolute;
+    top: 0.25em;
+    right: -5em;
+    transition: 0.2s ease;
+}
+
+
+.dropdown-content {		/* Dropdown content */
+    font-family: var(--secondary-font-family);
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10;
+    text-align: right;
+    right: 0;
+    border-radius: 0.5rem;
+    transition: 0.2s ease;
+}
+
+.dropdown-option {
+    display: flex;
+    height: 3em;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0.75em;
+    transition: 0.2s ease;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    margin: 0 0.5em;
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    transition: 0.2s ease;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--global-color-grey);
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: var(--global-color-0);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+    transition: 0.2s;
+}
+
+/* Effects on dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    opacity: 0.8;
+    transition: 0.2s;
+}
+
+
+/* Tag on properties */
+._trsn {
+    transition: 0.2s ease;
+}
+
+._pad-top {
+    padding-top: 0.5rem;
+}
+
+._ellipsis {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: 0.2s ease;
+}
+
+.col-word > ._ellipsis:hover {
+    background-color: var(--global-color-0);
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spelling Bee</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+
+<body>
+<div class="flex-container flex-column v-margin">
+    <div class="container">
+        <h1 class="game-title">Spelling Bee</h1>
+    </div>
+
+    <div class="container">
+    <div class="container game-wrapper">
+        <div class="reset-button-wrapper" id="resetButton" title="Get new letters (resets the game!)">
+            <span class="reset-button-hex">&#x2B22;</span>
+            <p class="reset-button-text">&#x21BB;</p>
+        </div>
+        <div class="play-wrapper">
+            <div class="hexes-wrapper">
+                <div class="hex-wrapper" id="hex0">
+                    <div class="hex hex-center"><p class="hex-char hex-char-center" id="hexChar0">B</p></div>
+                </div>
+                <div class="hex-wrapper" id="hex1">
+                    <div class="hex"><p class="hex-char" id="hexChar1">B</p></div>
+                </div>
+                <div class="hex-wrapper" id="hex2">
+                    <div class="hex"><p class="hex-char" id="hexChar2">B</p></div>
+                </div>
+                <div class="hex-wrapper" id="hex3">
+                    <div class="hex"><p class="hex-char" id="hexChar3">B</p></div>
+                </div>
+                <div class="hex-wrapper" id="hex4">
+                    <div class="hex"><p class="hex-char" id="hexChar4">B</p></div>
+                </div>
+                <div class="hex-wrapper" id="hex5">
+                    <div class="hex"><p class="hex-char" id="hexChar5">B</p></div>
+                </div>
+                <div class="hex-wrapper" id="hex6">
+                    <div class="hex"><p class="hex-char" id="hexChar6">B</p></div>
+                </div>
+            </div>
+            <div class="input-wrapper">
+                <input class="word-input" type="text" id="wordInput">
+                <div class="submit-message">
+                    <p id="submitMessage" class="submit-message-p">Press enter to submit!</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="wordlist-wrapper">
+            <div class="wordlist">
+                <table class="wordlist-table">
+                    <tr class="th-row">
+                        <th class="col-word wl-th-word">Word</th>
+                        <th class="col-score wl-th-score">Score</th>
+                    </tr>
+                    <tbody id="wordlistTable"></tbody>
+                </table>
+            </div>
+            <div>
+                <table class="total-table">
+                    <tr class="th-row">
+                        <th class="col-word _top-border _pad-top">Total</th>
+                        <th class="col-score _top-border _pad-top total-score" id="totalScore"></th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Options menu -->
+    <div id="dropdown" class="dropdown">
+        <button class="dropbtn">⚙️</button>
+        <div class="dropdown-content _trsn">
+            <div class="dropdown-option">
+                <span>Easy</span>
+                <label class="switch">
+                    <input type="checkbox" id="difficultySwitch">
+                    <span class="slider round"></span>
+                </label>
+                <span>Hard</span>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+    <div class="container v-margin-l">
+        <p class="flavor-text _125">Spell as many words as you can! 🐝</p>
+        <hr>
+        <p class="flavor-text _125"><b>Rules:</b></p>
+        <p class="flavor-text">Type or click to make words. All words must:</p>
+        <ul class="rules-text">
+            <li>Contain the middle letter at least once</li>
+            <li>Use only the letters in the honeycomb (but you may use a letter any number of times!)</li>
+            <li>Be longer than <b>4</b> letters</li>
+            <li>Rarer letters are worth more points, and longer words score higher as well!</li>
+            <li>Using <b>all 7</b> letters gives a bonus of <b>50</b> points!</li>
+            <li>Fancy a challenge? Play on Hard for a <b>1.5x</b> score multiplier!</li>
+            <li>SOWPODS is used as the reference dictionary.</li>
+        </ul>
+        <hr>
+        <p class="flavor-text">Written by kaanaas</p>
+    </div>
+
+</div>
+
+<script src="/js/gameController.js" type="module"></script>
+</body>
+</html>
