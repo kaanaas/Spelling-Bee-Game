@@ -515,6 +515,10 @@ p::selection {
     font-size: 1.25rem;
 }
 
+.all-words-table {
+
+}
+
 .col-word {
     width: 70%;
     max-width: 70%;
@@ -532,7 +536,7 @@ p::selection {
 }
 
 .wl-th-word {
-    border-bottom: 1px var(--global-color-white) solid;
+    border-bottom: 2px var(--global-color-white) solid;
     padding: 0.5rem 0;
 }
 
@@ -569,6 +573,9 @@ tr:first-child > td {
     transition: 0.2s ease;
 }
 
+.all-words-col {
+    min-width: 12em;
+}
 
 /* Dropdown Menu */
 .dropbtn {		/* Dropdown button */
