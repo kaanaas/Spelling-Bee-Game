@@ -26,3 +26,6 @@ hs_err_pid*
 beecode.ipynb
 index-localtest.html
 app.js
+node_modules
+package.json
+package-lock.json
