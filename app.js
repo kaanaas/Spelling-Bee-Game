@@ -10,10 +10,6 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/index.html"));
 });
 
-app.get("/dict", (req, res) => {
-    res.sendFile(path.join(__dirname + "/sowpods.txt"));
-});
-
 const port = process.env.PORT || 3000;
 app.set('port', port);
 app.listen(port, () => {
