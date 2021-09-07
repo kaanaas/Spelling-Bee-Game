@@ -268,6 +268,11 @@ p::selection {
     gap: 1em;
 }
 
+.all-words-table-wrapper {
+    text-align: center;
+    margin: 0;
+}
+
 
 /* Buttons */
 .action-button-wrapper {
@@ -507,8 +512,6 @@ p::selection {
     margin: 0.5rem auto;
     width: 90%;
     max-width: 90%;
-    table-layout: fixed;
-    display: table;
     padding: 1rem;
     border-collapse: collapse;
     text-align: center;
@@ -516,7 +519,8 @@ p::selection {
 }
 
 .all-words-table {
-
+    margin: 0;
+    padding: 0;
 }
 
 .col-word {
