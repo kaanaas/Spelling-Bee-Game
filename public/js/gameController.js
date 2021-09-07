@@ -290,7 +290,7 @@ function buildTable(wordsTried) {
                         <td class="col-word"><div class="_ellipsis">${wordsTried[i].word}</div></td>
                         <td class="col-score"><div class="_ellipsis">${wordsTried[i].score}</div></td>
                    </tr>`;
-        table.innerHTML += row;
+        table.innerHTML = row + table.innerHTML;
     }
 
     // Update total score (consider adding after score-calc step for better implementation?)
