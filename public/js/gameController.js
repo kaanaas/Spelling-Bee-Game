@@ -5,11 +5,11 @@ import {letterValues} from "./dictionaries/letterValues.js";
 import {sowpods} from "./dictionaries/sowpods.js";
 
 // sounds
-const audioGameEnd = new Audio("./sounds/mixkit-revealing-bonus-notification-958.wav");
-const audioShuffle = new Audio("./sounds/mixkit-correct-answer-notification-947.wav")
-const audioCorrect = new Audio("./sounds/mixkit-correct-answer-tone-2870.wav");
-const audioWrong = new Audio("./sounds/mixkit-wrong-electricity-buzz-955.wav");
-const audioNewGame = new Audio("./sounds/mixkit-tile-game-reveal-960.wav");
+const audioGameEnd = new Audio("../sounds/mixkit-revealing-bonus-notification-958.wav");
+const audioShuffle = new Audio("../sounds/mixkit-correct-answer-notification-947.wav")
+const audioCorrect = new Audio("../sounds/mixkit-correct-answer-tone-2870.wav");
+const audioWrong = new Audio("../sounds/mixkit-wrong-electricity-buzz-955.wav");
+const audioNewGame = new Audio("../sounds/mixkit-tile-game-reveal-960.wav");
 
 const dict = sowpods;
 
