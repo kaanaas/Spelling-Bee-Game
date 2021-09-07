@@ -241,11 +241,37 @@ p::selection {
     height: 85%;
 }
 
-/* Buttons */
-.reset-button-wrapper {
+.end-message-wrapper {
     position: absolute;
-    top: 16px;
-    left: 20px;
+    top: 16%;
+    width: 80%;
+
+    display: none;
+    z-index: 99;
+    border-radius: 1em;
+    background-color: var(--global-color-grey);
+    border: var(--global-color-0l) 3px solid;
+    box-shadow: 5px 5px 5px 0 var(--global-color-dgrey);
+    transition: 0.2s ease;
+}
+
+.end-message {
+    padding: 1em 2.5em;
+    text-align: center;
+}
+
+.see-more-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+
+/* Buttons */
+.action-button-wrapper {
+    position: absolute;
     height: 3.2rem;
     width: 3.2rem;
     text-align: center;
@@ -253,18 +279,48 @@ p::selection {
     will-change: transform;
 }
 
-.reset-button-hex {
+.reset-button-wrapper {
+    top: 16px;
+    left: 20px;
+}
+
+.shuffle-button-wrapper {
+    top: 16px;
+    left: 65px;
+}
+
+.end-button-wrapper {
+    top: 16px;
+    left: 380px;
+}
+
+.button-hex {
     position: absolute;
-    top: 50%;
-    left: 0;
-    color: var(--global-color-0);
     font-size: 4rem;
     line-height: 0;
     margin: 0;
     padding: 0;
 }
 
-.reset-button-text {
+.reset-button {
+    top: 50%;
+    left: 0;
+    color: var(--global-color-0);
+}
+
+.shuffle-button {
+    top: 50%;
+    left: 0;
+    color: var(--global-color-grey);
+}
+
+.end-button {
+    top: 50%;
+    left: 0;
+    color: var(--global-color-red);
+}
+
+.action-button-text {
     position: absolute;
     top: 50%;
     left: 0.8rem;
@@ -275,21 +331,68 @@ p::selection {
     padding: 0;
 }
 
-.reset-button-hex::selection {
+.shuffle-text {
+    top: 45%;
+    left: 0.4rem;
+}
+
+.end-text {
+    color: var(--global-color-white);
+    top: 42%;
+    left: 1rem;
+}
+
+.button-hex::selection {
     background-color: #0000;
 }
 
-.reset-button-text::selection {
+.action-button-text::selection {
     background-color: #0000;
 }
 
-.reset-button-wrapper:hover {
+.action-button-wrapper:hover {
     opacity: 0.75;
 }
 
-.reset-button-wrapper:active {
+.action-button-wrapper:active {
     transform: scale(0.9) rotate(540deg);
 }
+
+.close-button-wrapper {
+    position: absolute;
+    right: 1em;
+    transition: 0.2s ease;
+    will-change: transform;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.close-button {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--global-color-dark);
+    margin: 0;
+}
+
+.close-button-wrapper:hover {
+    opacity: 0.75;
+}
+
+.close-button-wrapper:active {
+    transform: scale(0.75);
+}
+
+.see-more-button {
+    text-align: center;
+    border: none;
+    font-size: 1rem;
+    font-family: var(--game-font-family);
+    background-color: var(--global-color-0l);
+    padding: 0.75em;
+    border-radius: 0.35em;
+    width: 15rem;
+}
+
 
 /* text */
 .game-title {
@@ -357,6 +460,21 @@ p::selection {
 
 .repeated-word {
     text-transform: uppercase;
+    color: var(--global-color-dgrey);
+}
+
+.game-over-msg {
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-family: var(--header-font-family);
+}
+
+.end-p {
+    font-size: 1.25rem;
+}
+
+.end-p-ps {
+    margin: 2.5em 0 1.5em 0;
     color: var(--global-color-dgrey);
 }
 

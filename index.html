@@ -14,80 +14,115 @@
     </div>
 
     <div class="container">
-    <div class="container game-wrapper">
-        <div class="reset-button-wrapper" id="resetButton" title="Get new letters (resets the game!)">
-            <span class="reset-button-hex">&#x2B22;</span>
-            <p class="reset-button-text">&#x21BB;</p>
-        </div>
-        <div class="play-wrapper">
-            <div class="hexes-wrapper">
-                <div class="hex-wrapper" id="hex0">
-                    <div class="hex hex-center"><p class="hex-char hex-char-center" id="hexChar0">B</p></div>
+        <div class="container game-wrapper">
+            <div class="action-button-wrapper reset-button-wrapper" id="resetButton" title="Get new letters (resets the game!)">
+                <span class="button-hex reset-button">&#x2B22;</span>
+                <p class="action-button-text">&#x21BB;</p>
+            </div>
+            <div class="action-button-wrapper shuffle-button-wrapper" id="shuffleButton" title="Shuffle tiles around">
+                <span class="button-hex shuffle-button">&#x2B22;</span>
+                <p class="action-button-text shuffle-text">&#x21AD;</p>
+            </div>
+            <div class="action-button-wrapper end-button-wrapper" id="endButton" title="Give up">
+                <span class="button-hex end-button">&#x2B22;</span>
+                <p class="action-button-text end-text">&#x25A0;</p>
+            </div>
+
+            <div class="play-wrapper">
+                <div class="hexes-wrapper">
+                    <div class="hex-wrapper" id="hex0">
+                        <div class="hex hex-center"><p class="hex-char hex-char-center" id="hexChar0">B</p></div>
+                    </div>
+                    <div class="hex-wrapper" id="hex1">
+                        <div class="hex"><p class="hex-char" id="hexChar1">B</p></div>
+                    </div>
+                    <div class="hex-wrapper" id="hex2">
+                        <div class="hex"><p class="hex-char" id="hexChar2">B</p></div>
+                    </div>
+                    <div class="hex-wrapper" id="hex3">
+                        <div class="hex"><p class="hex-char" id="hexChar3">B</p></div>
+                    </div>
+                    <div class="hex-wrapper" id="hex4">
+                        <div class="hex"><p class="hex-char" id="hexChar4">B</p></div>
+                    </div>
+                    <div class="hex-wrapper" id="hex5">
+                        <div class="hex"><p class="hex-char" id="hexChar5">B</p></div>
+                    </div>
+                    <div class="hex-wrapper" id="hex6">
+                        <div class="hex"><p class="hex-char" id="hexChar6">B</p></div>
+                    </div>
                 </div>
-                <div class="hex-wrapper" id="hex1">
-                    <div class="hex"><p class="hex-char" id="hexChar1">B</p></div>
-                </div>
-                <div class="hex-wrapper" id="hex2">
-                    <div class="hex"><p class="hex-char" id="hexChar2">B</p></div>
-                </div>
-                <div class="hex-wrapper" id="hex3">
-                    <div class="hex"><p class="hex-char" id="hexChar3">B</p></div>
-                </div>
-                <div class="hex-wrapper" id="hex4">
-                    <div class="hex"><p class="hex-char" id="hexChar4">B</p></div>
-                </div>
-                <div class="hex-wrapper" id="hex5">
-                    <div class="hex"><p class="hex-char" id="hexChar5">B</p></div>
-                </div>
-                <div class="hex-wrapper" id="hex6">
-                    <div class="hex"><p class="hex-char" id="hexChar6">B</p></div>
+                <div class="input-wrapper">
+                    <input class="word-input" type="text" id="wordInput">
+                    <div class="submit-message">
+                        <p id="submitMessage" class="submit-message-p">Press enter to submit!</p>
+                    </div>
                 </div>
             </div>
-            <div class="input-wrapper">
-                <input class="word-input" type="text" id="wordInput">
-                <div class="submit-message">
-                    <p id="submitMessage" class="submit-message-p">Press enter to submit!</p>
+
+
+            <div class="wordlist-wrapper">
+                <div class="wordlist">
+                    <table class="wordlist-table">
+                        <tr class="th-row">
+                            <th class="col-word wl-th-word">Word</th>
+                            <th class="col-score wl-th-score">Score</th>
+                        </tr>
+                        <tbody id="wordlistTable"></tbody>
+                    </table>
                 </div>
+                <div>
+                    <table class="total-table">
+                        <tr class="th-row">
+                            <th class="col-word _top-border _pad-top">Total</th>
+                            <th class="col-score _top-border _pad-top total-score" id="totalScore"></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="endScreen" class="container end-message-wrapper" style="display: none">
+                <div id="closeEndButton" class="close-button-wrapper">
+                    <div class="close-button">x</div>
+                </div>
+                <div class="container end-message">
+                    <p id="gameOverMessage" class="game-over-msg">Game Over!</p>
+                    <p id="endMessage" class="end-p">You found {}/{} words.</p>
+                    <p id="bestWord" class="end-p"></p>
+
+                    <div class="see-more-wrapper">
+                        <label for="seeMoreButton" class="see-more-button">See All Words</label>
+                        <input id="seeMoreButton" type="checkbox" style="display: none"/>
+                        <table id="allWordsTableWrapper" class="all-words-table" style="display: none">
+                            <tr class="th-row">
+                                <th class="col-word wl-th-word">Word</th>
+                                <th class="col-score wl-th-score">Score</th>
+                            </tr>
+                            <tbody id="allWordsTable"></tbody>
+                        </table>
+                    </div>
+
+                    <p id="playAgain" class="end-p-ps">Click the <b>reset</b> &#x21BB; button to play again.</p>
+                </div>
+
             </div>
         </div>
 
+        <!-- Options menu -->
+        <div id="dropdown" class="dropdown">
+            <button class="dropbtn">⚙️</button>
+            <div class="dropdown-content _trsn">
+                <div class="dropdown-option">
+                    <span>Easy</span>
+                    <label class="switch">
+                        <input type="checkbox" id="difficultySwitch">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Hard</span>
+                </div>
 
-        <div class="wordlist-wrapper">
-            <div class="wordlist">
-                <table class="wordlist-table">
-                    <tr class="th-row">
-                        <th class="col-word wl-th-word">Word</th>
-                        <th class="col-score wl-th-score">Score</th>
-                    </tr>
-                    <tbody id="wordlistTable"></tbody>
-                </table>
-            </div>
-            <div>
-                <table class="total-table">
-                    <tr class="th-row">
-                        <th class="col-word _top-border _pad-top">Total</th>
-                        <th class="col-score _top-border _pad-top total-score" id="totalScore"></th>
-                    </tr>
-                </table>
             </div>
         </div>
-    </div>
-
-    <!-- Options menu -->
-    <div id="dropdown" class="dropdown">
-        <button class="dropbtn">⚙️</button>
-        <div class="dropdown-content _trsn">
-            <div class="dropdown-option">
-                <span>Easy</span>
-                <label class="switch">
-                    <input type="checkbox" id="difficultySwitch">
-                    <span class="slider round"></span>
-                </label>
-                <span>Hard</span>
-            </div>
-
-        </div>
-    </div>
     </div>
 
     <div class="container v-margin-l">

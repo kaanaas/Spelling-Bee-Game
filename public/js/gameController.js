@@ -4,34 +4,76 @@
 import {letterValues} from "./dictionaries/letterValues.js";
 import {sowpods} from "./dictionaries/sowpods.js";
 
+// sounds
+const audioGameEnd = new Audio("../sounds/mixkit-revealing-bonus-notification-958.wav");
+const audioShuffle = new Audio("../sounds/mixkit-correct-answer-notification-947.wav")
+const audioCorrect = new Audio("../sounds/mixkit-correct-answer-tone-2870.wav");
+const audioWrong = new Audio("../sounds/mixkit-wrong-electricity-buzz-955.wav");
+const audioNewGame = new Audio("../sounds/mixkit-tile-game-reveal-960.wav");
+
+const dict = sowpods;
+
 // Initialize variables
 const lengthBonuses = [0, 2, 4, 8, 13];
 const bingoBonus = 50;
 const noOfLetters = 7;      // value for number of letters to fill in grid
 const validLetters = [{"difficulty": ""}, {"keystoneLetter": "", "otherLetters": []}];
 const wordsTried = [];      // Submitted word list
-const gameWordList = [];    // All valid words this round (no length restriction)
-const gameWordList4 = [];   // All playable words this round
+const wordsTriedRaw = [];   // Without score attached
+const gameWordList = [];    // All playable words this round
+const gameWordListScored = [];  // With scores
 const table = document.getElementById("wordlistTable");
 const totalTable = document.getElementById("totalScore");
+const allWordsTable = document.getElementById("allWordsTable");
+const allWordsTableWrapper =  document.getElementById("allWordsTableWrapper");
 const wordInput = document.getElementById("wordInput");
+const endScreen = document.getElementById("endScreen");
 buildTable(wordsTried);     // build table on page load
 
 
 /* Events */
+/* Buttons */
 // Generate letters on page load
-window.onload = () => {
-    genLetters();
-    genGameWordList();
-}
+window.onload = resetGame;
 wordInput.focus();
 
 // Reset button pressed: generate new letters
-document.getElementById("resetButton").addEventListener("click", () => {
-    genLetters();
-    genGameWordList();
-    resetGame();
+document.getElementById("resetButton").addEventListener("click", resetGame);
+
+// Shuffle button pressed: shuffle board position
+document.getElementById("shuffleButton").addEventListener("click", function() {
+    playAudioShuffle();
+    shuffleArray(validLetters[1].otherLetters);
+    updateGameBoard();
 });
+
+// Give up button pressed: Show end game screen
+document.getElementById("endButton").addEventListener("click", function() {
+    audioGameEnd.play();
+    wordInput.disabled = true;
+    scoreAllWords();
+    buildTableEnd(gameWordListScored);
+    document.getElementById("submitMessage").innerHTML = "Press <b>Reset</b> &#x21BB; to play again!"
+    endScreen.style.display = "inline-block";
+    document.getElementById("gameOverMessage").innerHTML = `Game Over!`;
+    let totalScore = getTotalScore(gameWordListScored);
+    let playerScore = getTotalScore(wordsTried);
+    document.getElementById("endMessage").innerHTML = `You found <b>${wordsTried.length}/${gameWordList.length}</b> words for a total of <b>${playerScore}/${totalScore}</b> points!`;
+    let best = getBestWord(wordsTried);
+    if (wordsTried.length > 0) { document.getElementById("bestWord").innerHTML = `Your best word was <b class="accepted-word">${best.word}</b> for <b>${best.score}</b> points!`; }
+});
+
+// Close end screen button
+document.getElementById("closeEndButton").addEventListener("click", function () {
+    endScreen.style.display = "none";
+});
+
+// See more words button
+document.getElementById("seeMoreButton").addEventListener("change", function () {
+    this.checked ? allWordsTableWrapper.style.display = "block" : allWordsTableWrapper.style.display = "none";
+});
+
+
 
 // validate input field - letters only
 const validateInput = function(event) {
@@ -53,30 +95,51 @@ wordInput.addEventListener("keyup", function (event) {
         if (checkWordInDict(wordInstance.word)) {
             // check validity by game rules
             let validStatus = checkWordValid(wordInstance.word)
-            console.log(validStatus);
+            // console.log(validStatus);
             if (validStatus === "invalid letter") {
+                playAudioWrong();
                 document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> contains invalid letters!`;
                 wordInput.value = "";   // reset input field
             } else if (validStatus === "no keystone") {
+                playAudioWrong();
                 document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> doesn't contain <b>${validLetters[1].keystoneLetter}</b>!`;
                 wordInput.value = "";   // reset input field
             } else if (validStatus === "too short") {
+                playAudioWrong();
                 document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> is less than 4 letters long!`;
                 wordInput.value = "";   // reset input field
             } else if (validStatus === "repeat") {
+                playAudioWrong();
                 document.getElementById("submitMessage").innerHTML = `<b class="repeated-word accepted-word-wrapper">${wordInstance.word}</b> was already used.`;
                 wordInput.value = "";   // reset input field
             } else {
+                playAudioCorrect();
                 wordInstance.score = scoreWord(wordInstance.word);
                 // update words tried list and score
                 wordsTried.push(wordInstance);
+                wordsTriedRaw.push(wordInstance.word);
                 document.getElementById("submitMessage").innerHTML = `<b class="accepted-word accepted-word-wrapper">${wordInstance.word}</b> for <b>${wordInstance.score}</b> points!`;
                 wordInput.value = "";   // reset input field
                 buildTable(wordsTried);
             }
         } else {
+            playAudioWrong();
             document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> is not a valid word!`;
             wordInput.value = "";   // reset input field
+        }
+
+        // If all possible words found: end game screen
+        if (wordsTriedRaw.length === gameWordList.length) {
+            if (wordsTriedRaw.sort() === gameWordList.sort()) {
+                let best = getBestWord(wordsTried);
+                let totalScore = getTotalScore(gameWordListScored);
+                endScreen.style.display = "inline-block";
+                document.getElementById("gameOverMessage").innerHTML = `Congrats!`;
+                document.getElementById("endMessage").innerHTML = `You found all <b>${gameWordList.length}</b> words for ${totalScore} points!`;
+                document.getElementById("bestWord").innerHTML = `Your best word was <b class="accepted-word">${best.word}</b> for <b>${best.score}</b> points!`;
+                scoreAllWords();
+                buildTableEnd(gameWordListScored);
+            }
         }
 
         // debug - clear temporary word handler
@@ -160,9 +223,9 @@ function checkWordValid(word) {
  */
 // Check word in dictionary
 function checkWordInDict(word) {
-    // let firstLetter = word[0];
-    // return sowpods[firstLetter].includes(word);
-    return gameWordList.includes(word);
+    let firstLetter = word[0];
+    return dict[firstLetter].includes(word);
+    // return gameWordList.includes(word);
 }
 
 /**
@@ -192,7 +255,7 @@ function scoreWord(word) {
         }
     }
     score += lengthBonus;
-    console.log(`length bonus of ${lengthBonus}!`);
+    // console.log(`length bonus of ${lengthBonus}`);
 
     // bingo bonus
     let bingo = false;
@@ -206,7 +269,7 @@ function scoreWord(word) {
     }
     if (bingo === true) {
         score += bingoBonus;
-        console.log(`Bingo! Bonus of ${bingoBonus}!`);
+        console.log(`Bingo! Bonus of ${bingoBonus} points.`);
     }
 
     // difficulty multiplier (last)
@@ -239,6 +302,29 @@ function buildTable(wordsTried) {
     totalScore ? totalTable.innerHTML = `${totalScore}` : totalTable.innerHTML = "0";
 }
 
+// generate scores for all game words
+function scoreAllWords() {
+    gameWordListScored.length = 0;
+    for (let i = 0; i < gameWordList.length; i++) {
+        let wordScore = scoreWord(gameWordList[i]);
+        let thisWord = {"word": gameWordList[i], "score": wordScore};
+        gameWordListScored.push(thisWord);
+    }
+     console.log(gameWordListScored);
+}
+
+// Build end screen table (all words)
+function buildTableEnd(wordsAll) {
+    allWordsTable.innerHTML = ``;
+    for (let i = 0; i < wordsAll.length; i++) {
+        let row = `<tr>
+                        <td class="col-word"><div class="_ellipsis">${wordsAll[i].word}</div></td>
+                        <td class="col-score"><div class="_ellipsis">${wordsAll[i].score}</div></td>
+                   </tr>`;
+        allWordsTable.innerHTML += row;
+    }
+}
+
 /**
  *
  */
@@ -265,30 +351,26 @@ function genLetters() {
     console.log(`Key letter: ${validLetters[1].keystoneLetter}, Other letters chosen: ${validLetters[1].otherLetters}`);
     usedLetters.length = 0;
 
-    // Update game board
-    document.getElementById("hexChar0").innerHTML = validLetters[1].keystoneLetter;
-    for (let i = 0; i < noOfLetters - 1; i++) {
-        document.getElementById(`hexChar${i+1}`).innerHTML = validLetters[1].otherLetters[i];
-    }
+    updateGameBoard();
 }
 
 // Generate list of all words playable this round
 function genGameWordList() {
+    gameWordList.length = 0;
     let letters = Object.keys(letterValues);
     let validLettersAll = [...validLetters[1].keystoneLetter, ...validLetters[1].otherLetters];
     let reg = new RegExp(`^[${validLettersAll}]+$`, "g");
+
     for (let i = 0; i < letters.length; i++) {
-        let letterDict = sowpods[letters[i]];
+        let letterDict = dict[letters[i]];
         for (let j = 0; j < letterDict.length; j++) {
-            if (reg.test(letterDict[j])) { gameWordList.push(letterDict[j]); }
+            if (reg.test(letterDict[j]) && (letterDict[j].length >= 4) && (letterDict[j].includes(validLetters[1].keystoneLetter))) {
+                gameWordList.push(letterDict[j]);
+            }
         }
-        letterDict.length = 0;
     }
 
-    for (let i = 0; i < gameWordList.length; i++) {
-        if ((gameWordList[i].length >= 4) && (gameWordList[i].includes(validLetters[1].keystoneLetter))) { gameWordList4.push(gameWordList[i]); }
-    }
-    console.log(`Game word list: ${gameWordList4}`);
+    console.log(`Game word list: ${gameWordList}`);
 }
 
 // creates weighted array of letters to choose from
@@ -311,13 +393,88 @@ function weighLetters(letterValues, difficulty) {
     return wArray;
 }
 
+// gets best word
+function getBestWord(tried) {
+    let bestScore = 0; let bestWord = "";
+    for (let i = 0; i < tried.length; i++) {
+        if (tried[i].score > bestScore) {
+            bestScore = tried[i].score;
+            bestWord = tried[i].word;
+        }
+    }
+    return {"word": bestWord, "score": bestScore};
+}
+
+// Gets total score
+function getTotalScore(wordlist) {
+    let total = 0;
+    wordlist.forEach(item => {
+        total += item.score;
+    });
+    return total;
+}
+
+
+
+/**
+ *
+ * @param array
+ */
+// shuffles letter array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+/**
+ *
+ */
+// Update game board
+function updateGameBoard() {
+    document.getElementById("hexChar0").innerHTML = validLetters[1].keystoneLetter;
+    for (let i = 0; i < noOfLetters - 1; i++) {
+        document.getElementById(`hexChar${i+1}`).innerHTML = validLetters[1].otherLetters[i];
+    }
+}
+
+// Plays audio cue (correct)
+function playAudioCorrect() {
+    audioCorrect.currentTime = 0;
+    audioCorrect.play();
+}
+
+// Plays audio cue (wrong)
+function playAudioWrong() {
+    audioWrong.currentTime = 0;
+    audioWrong.play();
+}
+
+// Plays audio cue (shuffle)
+function playAudioShuffle() {
+    audioShuffle.currentTime = 0;
+    audioShuffle.play();
+}
+
+
 /**
  *
  */
 // Resets the game
 function resetGame() {
+    audioNewGame.currentTime = 0;
+    audioNewGame.play();
+    genLetters();
+    genGameWordList();
+    allWordsTable.innerHTML = ``;
+    allWordsTableWrapper.style.display = "none";
     wordsTried.length = 0;
     wordInput.value = "";
+    wordInput.disabled = false;
+    endScreen.style.display = "none";
     document.getElementById("submitMessage").innerHTML = "Press enter to submit!"
     buildTable(wordsTried);
+    wordInput.focus();
+    document.getElementById("seeMoreButton").checked = false;
 }
