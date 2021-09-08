@@ -77,17 +77,21 @@
                         <tbody id="wordlistTable"></tbody>
                     </table>
                 </div>
-                <div>
-                    <table class="total-table">
-                        <tr class="th-row">
-                            <th class="col-word _top-border _bottom-border _pad-top _pad-bottom">Total</th>
-                            <th class="col-score _top-border _bottom-border _pad-top _pad-bottom total-score" id="totalScore"></th>
-                        </tr>
-                    </table>
+                <div class="container">
+                    <div>
+                        <table class="total-table">
+                            <tr class="th-row">
+                                <th class="col-word _top-border _bottom-border _pad-top _pad-bottom">Total</th>
+                                <th class="col-score _top-border _bottom-border _pad-top _pad-bottom total-score" id="totalScore"></th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="container words-left-wrapper">
+                        <p id="wordsLeft" class="words-left-text" style="margin-bottom: 0.5rem"></p>
+                        <p id="bingosLeft" class="words-left-text" style="margin-top: 0"></p>
+                    </div>
                 </div>
-                <div class="container words-left-wrapper">
-                    <p id="wordsLeft" class="words-left-text"></p>
-                </div>
+
             </div>
 
             <div id="endScreen" class="container end-message-wrapper" style="display: none">
@@ -97,6 +101,7 @@
                 <div class="container end-message">
                     <p id="gameOverMessage" class="game-over-msg">Game Over!</p>
                     <p id="endMessage" class="end-p">You found {}/{} words.</p>
+                    <p id="bingoMessage" class="end-p"></p>
                     <p id="bestWord" class="end-p"></p>
 
                     <div class="see-more-wrapper">
