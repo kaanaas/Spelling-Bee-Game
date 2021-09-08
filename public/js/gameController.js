@@ -22,6 +22,8 @@ const wordsTried = [];      // Submitted word list
 const wordsTriedRaw = [];   // Without score attached
 const gameWordList = [];    // All playable words this round
 const gameWordListScored = [];  // With scores
+var gameBingos = 0;
+var foundBingos = 0;
 var allowInput = false;
 const table = document.getElementById("wordlistTable");
 const totalTable = document.getElementById("totalScore");
@@ -60,6 +62,9 @@ document.getElementById("endButton").addEventListener("click", function() {
     let totalScore = getTotalScore(gameWordListScored);
     let playerScore = getTotalScore(wordsTried);
     document.getElementById("endMessage").innerHTML = `You found <b>${wordsTried.length}/${gameWordList.length}</b> words for a total of <b>${playerScore}/${totalScore}</b> points!`;
+    if (!(gameBingos === 0)) {
+        document.getElementById("bingoMessage").innerHTML = `You found <b>${foundBingos}/${gameBingos}</b> bingos.`;
+    }
     let best = getBestWord(wordsTried);
     if (wordsTried.length > 0) { document.getElementById("bestWord").innerHTML = `Your best word was <b class="accepted-word">${best.word}</b> for <b>${best.score}</b> points!`; }
 });
@@ -182,7 +187,7 @@ function checkWordInDict(word) {
 /**
  *
  * @param word
- * @returns {number}
+ * @returns {(number|boolean)[]}
  */
 // Score word
 function scoreWord(word) {
@@ -220,19 +225,21 @@ function scoreWord(word) {
     }
     if (bingo === true) {
         score += bingoBonus;
-        // console.log(`Bingo! Bonus of ${bingoBonus} points.`);
+        // console.log(`Bingo found: ${word}! Bonus of ${bingoBonus} points.`);
     }
 
     // difficulty multiplier (last)
     if (difficulty === "hard") { score *= 1.5; }
-
-    return Math.floor(score);
+    return [Math.floor(score), bingo];
 }
 
+/**
+ *
+ */
 // Submits word on enter/button press
 function submitWord() {
     // reset temporary word handler
-    let wordInstance = {"word": "", "score": 0};
+    let wordInstance = {"word": "", "score": 0, "bingo": false};
     wordInstance.word = wordInput.value.toUpperCase();
 
     /* Check word */
@@ -259,10 +266,12 @@ function submitWord() {
             wordInput.value = "";   // reset input field
         } else {
             playAudioCorrect();
-            wordInstance.score = scoreWord(wordInstance.word);
+            [wordInstance.score, wordInstance.bingo] = scoreWord(wordInstance.word);
             // update words tried list and score
             wordsTried.push(wordInstance);
             wordsTriedRaw.push(wordInstance.word);
+
+            if (wordInstance.bingo === true) { foundBingos++ }
             document.getElementById("submitMessage").innerHTML = `<b class="accepted-word accepted-word-wrapper">${wordInstance.word}</b> for <b>${wordInstance.score}</b> points!`;
             wordInput.value = "";   // reset input field
             buildTable(wordsTried);
@@ -281,6 +290,9 @@ function submitWord() {
             endScreen.style.display = "inline-block";
             document.getElementById("gameOverMessage").innerHTML = `Congrats!`;
             document.getElementById("endMessage").innerHTML = `You found all <b>${gameWordList.length}</b> words for ${totalScore} points!`;
+            if (!(gameBingos === 0)) {
+                document.getElementById("bingoMessage").innerHTML = `You found all <b>${gameBingos}</b> bingos.`;
+            }
             document.getElementById("bestWord").innerHTML = `Your best word was <b class="accepted-word">${best.word}</b> for <b>${best.score}</b> points!`;
             scoreAllWords();
             buildTableEnd(gameWordListScored);
@@ -288,12 +300,12 @@ function submitWord() {
     }
 
     // debug - clear temporary word handler
-    wordInstance = {"word": "", "score": 0};
+    wordInstance = {"word": "", "score": 0, "bingo": false};
 }
 
 /**
  *
- * @param wordsTried
+ * @param tried
  */
 // Build table
 function buildTable(tried) {
@@ -314,15 +326,21 @@ function buildTable(tried) {
     }
     totalScore ? totalTable.innerHTML = `${totalScore}` : totalTable.innerHTML = "0";
     document.getElementById("wordsLeft").innerHTML = `<b class="words-left-no">${tried.length}/${gameWordList.length}</b> words found!`
+    if (!(gameBingos === 0)) {
+        document.getElementById("bingosLeft").innerHTML = `<b class="words-left-no">${foundBingos}/${gameBingos}</b> bingos found!`
+    }
 }
 
 // generate scores for all game words
 function scoreAllWords() {
     gameWordListScored.length = 0;
     for (let i = 0; i < gameWordList.length; i++) {
-        let wordScore = scoreWord(gameWordList[i]);
-        let thisWord = {"word": gameWordList[i], "score": wordScore};
+        let scoreOut = scoreWord(gameWordList[i]);
+        let thisWord = {"word": gameWordList[i], "score": scoreOut[0]};
         gameWordListScored.push(thisWord);
+        if (scoreOut[1] === true) {
+            gameBingos++;
+        }
     }
      // console.log(gameWordListScored);
 }
@@ -331,11 +349,19 @@ function scoreAllWords() {
 function buildTableEnd(wordsAll) {
     allWordsTable.innerHTML = ``;
     for (let i = 0; i < wordsAll.length; i++) {
-        let row = `<tr>
+        if (wordsTriedRaw.includes(wordsAll[i].word)) {
+            let row = `<tr>
+                        <td class="col-word"><div class="_ellipsis"><b class="accepted-word">${wordsAll[i].word}</b></div></td>
+                        <td class="col-score"><div class="_ellipsis"><b>${wordsAll[i].score}</b></div></td>
+                   </tr>`;
+            allWordsTable.innerHTML += row;
+        } else {
+            let row = `<tr>
                         <td class="col-word"><div class="_ellipsis">${wordsAll[i].word}</div></td>
                         <td class="col-score"><div class="_ellipsis">${wordsAll[i].score}</div></td>
                    </tr>`;
-        allWordsTable.innerHTML += row;
+            allWordsTable.innerHTML += row;
+        }
     }
 }
 
@@ -479,14 +505,19 @@ function playAudioShuffle() {
 function resetGame() {
     audioNewGame.currentTime = 0;
     audioNewGame.play();
+
+    wordsTried.length = 0;
+    gameBingos = 0;
+    foundBingos = 0;
+    wordInput.value = "";
+    wordInput.disabled = false;
+    allowInput = true;
+
     genLetters();
     genGameWordList();
     allWordsTable.innerHTML = ``;
     allWordsTableWrapper.style.display = "none";
-    wordsTried.length = 0;
-    wordInput.value = "";
-    wordInput.disabled = false;
-    allowInput = true;
+
     endScreen.style.display = "none";
     document.getElementById("submitMessage").innerHTML = "Press enter to submit!"
     buildTable(wordsTried);

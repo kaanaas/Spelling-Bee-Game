@@ -243,11 +243,14 @@ p::selection, li::selection, b::selection, td::selection, th::selection {
     height: 90%;
     background-color: var(--global-color-lgrey);
     border-radius: 0.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .wordlist {
     text-align: center;
-    height: 78%;
     max-height: 78%;
     overflow: scroll;
     overflow-x: hidden;
@@ -768,3 +771,4 @@ input:checked + .slider:before {
 .col-word > ._ellipsis:hover {
     background-color: var(--global-color-0);
 }
+
