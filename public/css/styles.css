@@ -238,10 +238,14 @@ p::selection {
 
 .wordlist {
     text-align: center;
-    height: 85%;
-    max-height: 85%;
+    height: 78%;
+    max-height: 78%;
     overflow: scroll;
     overflow-x: hidden;
+}
+
+.words-left-wrapper {
+    text-align: center;
 }
 
 .end-message-wrapper {
@@ -497,6 +501,14 @@ p::selection {
     line-height: 1.75;
 }
 
+.words-left-text {
+    font-size: 1.1rem;
+}
+
+.words-left-no {
+    font-size: 1.5rem;
+}
+
 ._125 {
     font-size: 1.25rem;
 }
@@ -567,6 +579,10 @@ p::selection {
 
 ._top-border {
     border-top: 2px var(--global-color-white) solid;
+}
+
+._bottom-border {
+    border-bottom: 2px var(--global-color-white) solid;
 }
 
 td {
@@ -709,6 +725,10 @@ input:checked + .slider:before {
 
 ._pad-top {
     padding-top: 0.5rem;
+}
+
+._pad-bottom {
+    padding-bottom: 0.5rem;
 }
 
 ._ellipsis {

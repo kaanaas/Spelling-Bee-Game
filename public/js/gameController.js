@@ -22,6 +22,7 @@ const wordsTried = [];      // Submitted word list
 const wordsTriedRaw = [];   // Without score attached
 const gameWordList = [];    // All playable words this round
 const gameWordListScored = [];  // With scores
+var allowInput = false;
 const table = document.getElementById("wordlistTable");
 const totalTable = document.getElementById("totalScore");
 const allWordsTable = document.getElementById("allWordsTable");
@@ -51,7 +52,7 @@ document.getElementById("shuffleButton").addEventListener("click", function() {
 document.getElementById("endButton").addEventListener("click", function() {
     audioGameEnd.play();
     wordInput.disabled = true;
-    scoreAllWords();
+    allowInput = false;
     buildTableEnd(gameWordListScored);
     document.getElementById("submitMessage").innerHTML = "Press <b>Reset</b> &#x21BB; to play again!"
     endScreen.style.display = "inline-block";
@@ -78,6 +79,8 @@ document.getElementById("seeMoreButton").addEventListener("change", function () 
 // validate input field - letters only
 const validateInput = function(event) {
     if (event.code.lastIndexOf("Key", 0) !== 0 && (event.code !== "Enter" && event.which !== 13)) {
+        event.preventDefault();
+    } else if (allowInput === false) {
         event.preventDefault();
     }
 }
@@ -153,9 +156,11 @@ for (let n = 0; n < noOfLetters; n++) {
     // click to enter letter
     let hex = document.getElementById(`hex${n}`);
     hex.addEventListener("click", function hexClick() {
-        let hexLetter = document.getElementById(`hexChar${n}`).innerHTML[0];
-        wordInput.focus();
-        wordInput.value += hexLetter;
+        if (allowInput === true) {
+            let hexLetter = document.getElementById(`hexChar${n}`).innerHTML[0];
+            wordInput.focus();
+            wordInput.value += hexLetter;
+        }
     });
 
     // type to depress hex
@@ -283,12 +288,12 @@ function scoreWord(word) {
  * @param wordsTried
  */
 // Build table
-function buildTable(wordsTried) {
+function buildTable(tried) {
     table.innerHTML = ``;
-    for (let i = 0; i < wordsTried.length; i++) {
+    for (let i = 0; i < tried.length; i++) {
         let row = `<tr>
-                        <td class="col-word"><div class="_ellipsis">${wordsTried[i].word}</div></td>
-                        <td class="col-score"><div class="_ellipsis">${wordsTried[i].score}</div></td>
+                        <td class="col-word"><div class="_ellipsis">${tried[i].word}</div></td>
+                        <td class="col-score"><div class="_ellipsis">${tried[i].score}</div></td>
                    </tr>`;
         table.innerHTML = row + table.innerHTML;
     }
@@ -296,10 +301,11 @@ function buildTable(wordsTried) {
     // Update total score (consider adding after score-calc step for better implementation?)
     totalTable.innerHTML = ``;
     let totalScore = 0;
-    for (let i = 0; i < wordsTried.length; i++) {
-        totalScore += wordsTried[i].score;
+    for (let i = 0; i < tried.length; i++) {
+        totalScore += tried[i].score;
     }
     totalScore ? totalTable.innerHTML = `${totalScore}` : totalTable.innerHTML = "0";
+    document.getElementById("wordsLeft").innerHTML = `<b class="words-left-no">${gameWordList.length - tried.length}</b> words left to find!`
 }
 
 // generate scores for all game words
@@ -369,7 +375,7 @@ function genGameWordList() {
             }
         }
     }
-
+    scoreAllWords();
     console.log(`Game word list: ${gameWordList}`);
 }
 
@@ -472,6 +478,7 @@ function resetGame() {
     wordsTried.length = 0;
     wordInput.value = "";
     wordInput.disabled = false;
+    allowInput = true;
     endScreen.style.display = "none";
     document.getElementById("submitMessage").innerHTML = "Press enter to submit!"
     buildTable(wordsTried);
