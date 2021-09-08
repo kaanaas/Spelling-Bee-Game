@@ -305,7 +305,7 @@ function buildTable(tried) {
         totalScore += tried[i].score;
     }
     totalScore ? totalTable.innerHTML = `${totalScore}` : totalTable.innerHTML = "0";
-    document.getElementById("wordsLeft").innerHTML = `<b class="words-left-no">${gameWordList.length - tried.length}</b> words left to find!`
+    document.getElementById("wordsLeft").innerHTML = `<b class="words-left-no">${tried.length}/${gameWordList.length}</b> words left to find!`
 }
 
 // generate scores for all game words
