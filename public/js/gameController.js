@@ -89,66 +89,12 @@ const validateInput = function(event) {
 wordInput.addEventListener("keypress", validateInput);      // prevent entering of non-alphabetical characters
 wordInput.addEventListener("keyup", function (event) {
     if (wordInput.value !== "" && (event.which === 13 || event.key === "Enter")) {
-        // reset temporary word handler
-        let wordInstance = {"word": "", "score": 0};
-        wordInstance.word = wordInput.value.toUpperCase();
-
-        /* Check word */
-        // check if in dictionary
-        if (checkWordInDict(wordInstance.word)) {
-            // check validity by game rules
-            let validStatus = checkWordValid(wordInstance.word)
-            // console.log(validStatus);
-            if (validStatus === "invalid letter") {
-                playAudioWrong();
-                document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> contains invalid letters!`;
-                wordInput.value = "";   // reset input field
-            } else if (validStatus === "no keystone") {
-                playAudioWrong();
-                document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> doesn't contain <b>${validLetters[1].keystoneLetter}</b>!`;
-                wordInput.value = "";   // reset input field
-            } else if (validStatus === "too short") {
-                playAudioWrong();
-                document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> is less than 4 letters long!`;
-                wordInput.value = "";   // reset input field
-            } else if (validStatus === "repeat") {
-                playAudioWrong();
-                document.getElementById("submitMessage").innerHTML = `<b class="repeated-word accepted-word-wrapper">${wordInstance.word}</b> was already used.`;
-                wordInput.value = "";   // reset input field
-            } else {
-                playAudioCorrect();
-                wordInstance.score = scoreWord(wordInstance.word);
-                // update words tried list and score
-                wordsTried.push(wordInstance);
-                wordsTriedRaw.push(wordInstance.word);
-                document.getElementById("submitMessage").innerHTML = `<b class="accepted-word accepted-word-wrapper">${wordInstance.word}</b> for <b>${wordInstance.score}</b> points!`;
-                wordInput.value = "";   // reset input field
-                buildTable(wordsTried);
-            }
-        } else {
-            playAudioWrong();
-            document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> is not a valid word!`;
-            wordInput.value = "";   // reset input field
-        }
-
-        // If all possible words found: end game screen
-        if (wordsTriedRaw.length === gameWordList.length) {
-            if (wordsTriedRaw.sort() === gameWordList.sort()) {
-                let best = getBestWord(wordsTried);
-                let totalScore = getTotalScore(gameWordListScored);
-                endScreen.style.display = "inline-block";
-                document.getElementById("gameOverMessage").innerHTML = `Congrats!`;
-                document.getElementById("endMessage").innerHTML = `You found all <b>${gameWordList.length}</b> words for ${totalScore} points!`;
-                document.getElementById("bestWord").innerHTML = `Your best word was <b class="accepted-word">${best.word}</b> for <b>${best.score}</b> points!`;
-                scoreAllWords();
-                buildTableEnd(gameWordListScored);
-            }
-        }
-
-        // debug - clear temporary word handler
-        wordInstance = {"word": "", "score": 0};
+        submitWord();
     }
 });
+
+// Submit word on submit button
+document.getElementById("submitWordButton").addEventListener("click", submitWord);
 
 
 // Hex responses to input
@@ -281,6 +227,68 @@ function scoreWord(word) {
     if (difficulty === "hard") { score *= 1.5; }
 
     return Math.floor(score);
+}
+
+// Submits word on enter/button press
+function submitWord() {
+    // reset temporary word handler
+    let wordInstance = {"word": "", "score": 0};
+    wordInstance.word = wordInput.value.toUpperCase();
+
+    /* Check word */
+    // check if in dictionary
+    if (checkWordInDict(wordInstance.word)) {
+        // check validity by game rules
+        let validStatus = checkWordValid(wordInstance.word)
+        // console.log(validStatus);
+        if (validStatus === "invalid letter") {
+            playAudioWrong();
+            document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> contains invalid letters!`;
+            wordInput.value = "";   // reset input field
+        } else if (validStatus === "no keystone") {
+            playAudioWrong();
+            document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> doesn't contain <b>${validLetters[1].keystoneLetter}</b>!`;
+            wordInput.value = "";   // reset input field
+        } else if (validStatus === "too short") {
+            playAudioWrong();
+            document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> is less than 4 letters long!`;
+            wordInput.value = "";   // reset input field
+        } else if (validStatus === "repeat") {
+            playAudioWrong();
+            document.getElementById("submitMessage").innerHTML = `<b class="repeated-word accepted-word-wrapper">${wordInstance.word}</b> was already used.`;
+            wordInput.value = "";   // reset input field
+        } else {
+            playAudioCorrect();
+            wordInstance.score = scoreWord(wordInstance.word);
+            // update words tried list and score
+            wordsTried.push(wordInstance);
+            wordsTriedRaw.push(wordInstance.word);
+            document.getElementById("submitMessage").innerHTML = `<b class="accepted-word accepted-word-wrapper">${wordInstance.word}</b> for <b>${wordInstance.score}</b> points!`;
+            wordInput.value = "";   // reset input field
+            buildTable(wordsTried);
+        }
+    } else {
+        playAudioWrong();
+        document.getElementById("submitMessage").innerHTML = `<b class="rejected-word accepted-word-wrapper">${wordInstance.word}</b> is not a valid word!`;
+        wordInput.value = "";   // reset input field
+    }
+
+    // If all possible words found: end game screen
+    if (wordsTriedRaw.length === gameWordList.length) {
+        if (wordsTriedRaw.sort() === gameWordList.sort()) {
+            let best = getBestWord(wordsTried);
+            let totalScore = getTotalScore(gameWordListScored);
+            endScreen.style.display = "inline-block";
+            document.getElementById("gameOverMessage").innerHTML = `Congrats!`;
+            document.getElementById("endMessage").innerHTML = `You found all <b>${gameWordList.length}</b> words for ${totalScore} points!`;
+            document.getElementById("bestWord").innerHTML = `Your best word was <b class="accepted-word">${best.word}</b> for <b>${best.score}</b> points!`;
+            scoreAllWords();
+            buildTableEnd(gameWordListScored);
+        }
+    }
+
+    // debug - clear temporary word handler
+    wordInstance = {"word": "", "score": 0};
 }
 
 /**

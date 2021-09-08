@@ -111,6 +111,14 @@ p::selection {
     height: 100%;
 }
 
+.action-buttons-container {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    width: 52.5%;
+    height: 10%;
+}
+
 .hexes-wrapper {
     --hex-edge-length: 60px;
     position: relative;
@@ -209,6 +217,7 @@ p::selection {
 }
 
 .input-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-items: center;
@@ -292,18 +301,23 @@ p::selection {
 }
 
 .reset-button-wrapper {
-    top: 16px;
-    left: 20px;
+    top: 0;
+    left: 0;
 }
 
 .shuffle-button-wrapper {
-    top: 16px;
-    left: 65px;
+    top: 0;
+    left: 45px;
 }
 
 .end-button-wrapper {
-    top: 16px;
-    left: 380px;
+    top: 0;
+    right: 0;
+}
+
+.submit-word-button-wrapper {
+    top: 0;
+    right: -1em;
 }
 
 .button-hex {
@@ -332,6 +346,12 @@ p::selection {
     color: var(--global-color-red);
 }
 
+.submit-word-button {
+    top: 50%;
+    left: 0;
+    color: var(--global-color-0);
+}
+
 .action-button-text {
     position: absolute;
     top: 50%;
@@ -352,6 +372,11 @@ p::selection {
     color: var(--global-color-white);
     top: 42%;
     left: 1rem;
+}
+
+.submit-word-text {
+    top: 43%;
+    left: 20%;
 }
 
 .button-hex::selection {

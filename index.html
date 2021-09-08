@@ -15,17 +15,19 @@
 
     <div class="container">
         <div class="container game-wrapper">
-            <div class="action-button-wrapper reset-button-wrapper" id="resetButton" title="Get new letters (resets the game!)">
-                <span class="button-hex reset-button">&#x2B22;</span>
-                <p class="action-button-text">&#x21BB;</p>
-            </div>
-            <div class="action-button-wrapper shuffle-button-wrapper" id="shuffleButton" title="Shuffle tiles around">
-                <span class="button-hex shuffle-button">&#x2B22;</span>
-                <p class="action-button-text shuffle-text">&#x21AD;</p>
-            </div>
-            <div class="action-button-wrapper end-button-wrapper" id="endButton" title="Give up">
-                <span class="button-hex end-button">&#x2B22;</span>
-                <p class="action-button-text end-text">&#x25A0;</p>
+            <div class="container action-buttons-container">
+                <div class="action-button-wrapper reset-button-wrapper" id="resetButton" title="Get new letters (resets the game!)">
+                    <span class="button-hex reset-button">&#x2B22;</span>
+                    <p class="action-button-text">&#x21BB;</p>
+                </div>
+                <div class="action-button-wrapper shuffle-button-wrapper" id="shuffleButton" title="Shuffle tiles around">
+                    <span class="button-hex shuffle-button">&#x2B22;</span>
+                    <p class="action-button-text shuffle-text">&#x21AD;</p>
+                </div>
+                <div class="action-button-wrapper end-button-wrapper" id="endButton" title="Give up">
+                    <span class="button-hex end-button">&#x2B22;</span>
+                    <p class="action-button-text end-text">&#x25A0;</p>
+                </div>
             </div>
 
             <div class="play-wrapper">
@@ -56,6 +58,10 @@
                     <input class="word-input" type="text" id="wordInput">
                     <div class="submit-message">
                         <p id="submitMessage" class="submit-message-p">Press enter to submit!</p>
+                    </div>
+                    <div class="action-button-wrapper submit-word-button-wrapper" id="submitWordButton" title="Submit Word">
+                        <span class="button-hex submit-word-button">&#x2B22;</span>
+                        <p class="action-button-text submit-word-text">&#x2192;</p>
                     </div>
                 </div>
             </div>
