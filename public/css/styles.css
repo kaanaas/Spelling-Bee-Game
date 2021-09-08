@@ -56,7 +56,7 @@ p {
     color: var(--global-color-dark);
 }
 
-p::selection {
+p::selection, li::selection, b::selection, td::selection, th::selection {
     background-color: var(--global-color-1);
 }
 
