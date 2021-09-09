@@ -326,7 +326,10 @@ function buildTable(tried) {
     }
     totalScore ? totalTable.innerHTML = `${totalScore}` : totalTable.innerHTML = "0";
     document.getElementById("wordsLeft").innerHTML = `<b class="words-left-no">${tried.length}/${gameWordList.length}</b> words found!`
-    if (!(gameBingos === 0)) {
+    if (gameBingos === 0) {
+        document.getElementById("bingosLeft").innerHTML = ``;
+    }
+    else if (!(gameBingos === 0)) {
         document.getElementById("bingosLeft").innerHTML = `<b class="words-left-no">${foundBingos}/${gameBingos}</b> bingos found!`
     }
 }
