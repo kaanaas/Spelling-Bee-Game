@@ -225,7 +225,7 @@ function scoreWord(word) {
     }
     if (bingo === true) {
         score += bingoBonus;
-        // console.log(`Bingo found: ${word}! Bonus of ${bingoBonus} points.`);
+        console.log(`Bingo found: ${word}! Bonus of ${bingoBonus} points.`);
     }
 
     // difficulty multiplier (last)
@@ -520,7 +520,7 @@ function resetGame() {
 
     endScreen.style.display = "none";
     document.getElementById("submitMessage").innerHTML = "Press enter to submit!"
-    buildTable(wordsTried);
     wordInput.focus();
     document.getElementById("seeMoreButton").checked = false;
+    buildTable(wordsTried);
 }
