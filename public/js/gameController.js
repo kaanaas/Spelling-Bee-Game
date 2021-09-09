@@ -225,7 +225,7 @@ function scoreWord(word) {
     }
     if (bingo === true) {
         score += bingoBonus;
-        console.log(`Bingo found: ${word}! Bonus of ${bingoBonus} points.`);
+        console.log(`Bingo found: ${word}! Bonus ${bingoBonus} pts.`);
     }
 
     // difficulty multiplier (last)
